@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Руководство для Репозитория Пресетов Final Cut Pro X</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font: Inter (Tailwind default) -->
+    <style>
+        /* Основной стиль для темной темы */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A0A0A; /* Очень тёмный фон */
+            color: #D1D5DB; /* Светло-серый основной текст */
+        }
+        
+        /* Градиентный акцент */
+        .gradient-text {
+            background-image: linear-gradient(to right, #3B82F6, #9333EA); /* Синий -> Фиолетовый */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Стиль для кругового номера шага с градиентом и свечением */
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 3rem; /* Размер круга */
+            font-size: 1.5rem;
+            font-weight: 700;
+            border-radius: 9999px; /* Полностью круглый */
+            aspect-ratio: 1 / 1; /* Для идеального круга */
+            background-image: linear-gradient(135deg, #3B82F6, #9333EA);
+            color: white;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5); /* Мягкое свечение */
+        }
+        
+        /* Классы для анимации появления (scroll reveal) */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .reveal-item.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Стиль для блока кода (моноширинный шрифт) */
+        .code-block {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+        }
+
+        /* Свечение и подъем карточки при наведении */
+        .guide-card {
+            transition: all 0.3s ease-in-out;
+            border: 1px solid #1F2937; /* Тонкая рамка */
+        }
+
+        .guide-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2), 0 0 20px rgba(147, 51, 234, 0.2);
+        }
+
+        /* Стиль активной вкладки */
+        .tab-active {
+            color: white;
+            box-shadow: 0 3px 0 0 #3B82F6;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen">
+
+    <!-- Уменьшен вертикальный отступ на мобильных устройствах (py-10 вместо py-16) -->
+    <div class="max-w-4xl mx-auto px-4 py-10 md:py-16">
+        
+        <!-- Заголовок -->
+        <!-- Уменьшен нижний отступ на мобильных устройствах (mb-10 вместо mb-16) -->
+        <header class="text-center mb-10 md:mb-16 reveal-item">
+            <!-- Уменьшен размер шрифта с text-5xl до text-3xl для мобильных устройств -->
+            <h1 class="text-3xl md:text-5xl font-extrabold mb-3 gradient-text tracking-tight shadow-blue-500/50">
+                Руководство по Пресетам Final Cut Pro X
+            </h1>
+            <!-- Уменьшен размер шрифта subtitle для мобильных устройств (text-base вместо text-lg) -->
+            <p class="text-gray-400 text-base md:text-lg">
+                Правила создания, организации и обмена пользовательскими ресурсами.
+            </p>
+        </header>
+
+        <!-- Раздел 1: Обзор -->
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold mb-8 gradient-text reveal-item">
+                // Что такое Пресеты
+            </h2>
+            <div class="guide-card p-6 bg-[#18181B] rounded-xl shadow-lg reveal-item">
+                <p class="text-gray-300">
+                    **Пресет** — это сохраненный набор настроек одного или нескольких эффектов, который позволяет мгновенно применить сложный визуальный или звуковой стиль к новому клипу. Использование пресетов критически важно для поддержания **единого стиля** и **максимального ускорения** вашего рабочего процесса, исключая необходимость повторной настройки параметров.
+                </p>
+            </div>
+        </section>
+        
+        <!-- Раздел 2: Пошаговое Создание -->
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold mb-12 gradient-text reveal-item">
+                // Создание Нового Пресета
+            </h2>
+            <div id="creation-steps" class="space-y-12">
+                
+                <!-- Шаг 1: Применение и Настройка -->
+                <div class="flex space-x-6 reveal-item">
+                    <div class="step-number flex-shrink-0">1</div>
+                    <div class="flex-grow">
+                        <h3 class="text-2xl font-semibold mb-2 text-white">Примените и Настройте Эффекты</h3>
+                        <p class="text-gray-400 mb-4">
+                            Начните с клипа на таймлайне. Добавьте все необходимые эффекты (видео, аудио, цветокоррекция) и точно настройте каждый параметр.
+                        </p>
+                        <div class="code-block bg-gray-800 p-4 rounded-lg overflow-x-auto relative">
+                            <pre class="text-sm text-green-300 select-all">// Пример настройки:
+Цветокоррекция: Насыщенность +15, Температура -5
+Размытие: Gaussian Blur, Радиус 8.0</pre>
+                            <button onclick="copyCode(this)" class="absolute top-2 right-2 text-gray-400 hover:text-white transition duration-200 p-1 rounded hover:bg-gray-700">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-2m-4 0a2 2 0 012 2v6m-4-6V7a2 2 0 012-2h4a2 2 0 012 2v12a2 2 0 01-2 2h-6a2 2 0 01-2-2V7a2 2 0 012-2z"></path></svg>
+                                <span class="sr-only">Копировать</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Шаг 2: Выберите Сохранение -->
+                <div class="flex space-x-6 reveal-item">
+                    <div class="step-number flex-shrink-0">2</div>
+                    <div class="flex-grow">
+                        <h3 class="text-2xl font-semibold mb-2 text-white">Используйте Опцию "Сохранить Пресет"</h3>
+                        <p class="text-gray-400 mb-4">
+                            В окне инспектора эффектов (или в контекстном меню клипа) найдите кнопку **"Сохранить Пресет Эффектов" (Save Effects Preset)**.
+                        </p>
+                        <div class="code-block bg-gray-800 p-4 rounded-lg overflow-x-auto relative">
+                            <pre class="text-sm text-green-300 select-all">Action: SaveEffectsPreset (Ctrl+Cmd+P)</pre>
+                            <button onclick="copyCode(this)" class="absolute top-2 right-2 text-gray-400 hover:text-white transition duration-200 p-1 rounded hover:bg-gray-700">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-2m-4 0a2 2 0 012 2v6m-4-6V7a2 2 0 012-2h4a2 2 0 012 2v12a2 2 0 01-2 2h-6a2 2 0 01-2-2V7a2 2 0 012-2z"></path></svg>
+                                <span class="sr-only">Копировать</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Шаг 3: Назначение Категории -->
+                <div class="flex space-x-6 reveal-item">
+                    <div class="step-number flex-shrink-0">3</div>
+                    <div class="flex-grow">
+                        <h3 class="text-2xl font-semibold mb-2 text-white">Назовите и Классифицируйте</h3>
+                        <p class="text-gray-400 mb-4">
+                            Во всплывающем окне дайте пресету **уникальное имя** (например, `Cyberpunk_Look_v2`) и выберите или создайте **Категорию**. Это поможет вам быстро найти его в Браузере эффектов.
+                        </p>
+                        <div class="code-block bg-gray-800 p-4 rounded-lg overflow-x-auto relative">
+                            <pre class="text-sm text-green-300 select-all">Категория: Мои_ЛУТы (или Custom_FX)</pre>
+                            <button onclick="copyCode(this)" class="absolute top-2 right-2 text-gray-400 hover:text-white transition duration-200 p-1 rounded hover:bg-gray-700">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-2m-4 0a2 2 0 012 2v6m-4-6V7a2 2 0 012-2h4a2 2 0 012 2v12a2 2 0 01-2 2h-6a2 2 0 01-2-2V7a2 2 0 012-2z"></path></svg>
+                                <span class="sr-only">Копировать</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Раздел 3: Управление Пресетами с Табами -->
+        <section>
+            <h2 class="text-3xl font-bold mb-8 gradient-text reveal-item">
+                // Управление Ресурсами Репозитория
+            </h2>
+            
+            <div class="guide-card p-6 bg-[#18181B] rounded-xl shadow-lg reveal-item">
+                <!-- Контейнер для вкладок (Tabs) -->
+                <div class="flex border-b border-gray-700 mb-6">
+                    <button class="tab-button px-4 py-2 text-gray-400 font-medium transition-all duration-300 tab-active" data-tab="modify">
+                        Изменение Настроек
+                    </button>
+                    <button class="tab-button px-4 py-2 text-gray-400 font-medium transition-all duration-300" data-tab="share">
+                        Экспорт и Обмен
+                    </button>
+                    <button class="tab-button px-4 py-2 text-gray-400 font-medium transition-all duration-300" data-tab="delete">
+                        Удаление
+                    </button>
+                </div>
+
+                <!-- Контент вкладок (Tab Content) -->
+                <div id="tab-content">
+                    
+                    <!-- Контент 1: Изменение Настроек -->
+                    <div id="modify" class="tab-pane active-tab">
+                        <p class="text-gray-400 mb-4">
+                            Для изменения пресета необходимо применить его к клипу, внести изменения и **сохранить его под тем же именем**, чтобы перезаписать предыдущую версию.
+                        </p>
+                        <div class="code-block bg-gray-900 p-4 rounded-lg overflow-x-auto relative border border-gray-700">
+                            <pre class="text-sm text-yellow-300 select-all">
+1. Примените старый пресет к новому клипу.
+2. Внесите корректировки в Инспекторе.
+3. Нажмите "Сохранить Пресет Эффектов".
+4. Введите СТАРТЫЙ ИМЯ пресета и подтвердите перезапись.
+                            </pre>
+                            <button onclick="copyCode(this)" class="absolute top-2 right-2 text-gray-400 hover:text-white transition duration-200 p-1 rounded hover:bg-gray-700">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-2m-4 0a2 2 0 012 2v6m-4-6V7a2 2 0 012-2h4a2 2 0 012 2v12a2 2 0 01-2 2h-6a2 2 0 01-2-2V7a2 2 0 012-2z"></path></svg>
+                                <span class="sr-only">Копировать</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Контент 2: Экспорт и Обмен -->
+                    <div id="share" class="tab-pane hidden">
+                        <p class="text-gray-400 mb-4">
+                            Пользовательские пресеты Final Cut Pro X хранятся в виде файлов в скрытой системной папке. Чтобы поделиться ими, нужно найти этот файл.
+                        </p>
+                        <div class="code-block bg-gray-900 p-4 rounded-lg overflow-x-auto relative border border-gray-700">
+                            <pre class="text-sm text-yellow-300 select-all">
+// Скрытый путь к папке пресетов (macOS, общий для ProApps):
+~/Library/Application Support/ProApps/EffectsPresets/
+
+// Действия:
+1. В Finder, удерживая Option, выберите "Переход" -> "Библиотека".
+2. Скопируйте файл пресета (.preset или .json).
+3. Передайте файл другому пользователю для импорта.
+                            </pre>
+                            <button onclick="copyCode(this)" class="absolute top-2 right-2 text-gray-400 hover:text-white transition duration-200 p-1 rounded hover:bg-gray-700">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-2m-4 0a2 2 0 012 2v6m-4-6V7a2 2 0 012-2h4a2 2 0 012 2v12a2 2 0 01-2 2h-6a2 2 0 01-2-2V7a2 2 0 012-2z"></path></svg>
+                                <span class="sr-only">Копировать</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Контент 3: Удаление -->
+                    <div id="delete" class="tab-pane hidden">
+                        <p class="text-gray-400 mb-4">
+                            Проще всего удалить пресет через Браузер эффектов, но иногда требуется ручное удаление файла.
+                        </p>
+                        <div class="code-block bg-gray-900 p-4 rounded-lg overflow-x-auto relative border border-gray-700">
+                            <pre class="text-sm text-yellow-300 select-all">
+// Вариант 1 (ПО):
+1. Найдите пресет в Браузере эффектов.
+2. Control-кликните (правая кнопка) и выберите "Удалить".
+
+// Вариант 2 (Ручной):
+1. Перейдите в папку EffectsPresets (см. соседнюю вкладку).
+2. Удалите соответствующий файл пресета из папки.
+3. Перезапустите программу.
+                            </pre>
+                            <button onclick="copyCode(this)" class="absolute top-2 right-2 text-gray-400 hover:text-white transition duration-200 p-1 rounded hover:bg-gray-700">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-2m-4 0a2 2 0 012 2v6m-4-6V7a2 2 0 012-2h4a2 2 0 012 2v12a2 2 0 01-2 2h-6a2 2 0 01-2-2V7a2 2 0 012-2z"></path></svg>
+                                <span class="sr-only">Копировать</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        
+        <!-- Сообщение об ошибке копирования -->
+        <div id="copy-message" class="fixed bottom-5 right-5 bg-purple-600 text-white px-4 py-2 rounded-lg shadow-xl hidden transition-opacity duration-300 opacity-0" role="alert">
+            Код скопирован в буфер обмена!
+        </div>
+
+    </div>
+
+    <script>
+        // === JS для Интерактивности ===
+
+        /**
+         * Управляет переключением вкладок.
+         */
+        function setupTabs() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabName = button.getAttribute('data-tab');
+
+                    // Сброс активного состояния кнопок
+                    tabButtons.forEach(btn => btn.classList.remove('tab-active'));
+                    button.classList.add('tab-active');
+
+                    // Скрытие/показ контента
+                    tabPanes.forEach(pane => {
+                        pane.classList.add('hidden');
+                        if (pane.id === tabName) {
+                            pane.classList.remove('hidden');
+                        }
+                    });
+                });
+            });
+        }
+        
+        /**
+         * Обрабатывает копирование кода в буфер обмена.
+         * @param {HTMLElement} button - Кнопка "Копировать".
+         */
+        function copyCode(button) {
+            // Ищем элемент <pre> внутри родительского code-block
+            const codeBlock = button.closest('.code-block');
+            const codeElement = codeBlock.querySelector('pre');
+            
+            // Получаем текст, игнорируя лишние пробелы/переводы строк
+            const textToCopy = codeElement.textContent.trim();
+
+            // Используем document.execCommand('copy') для совместимости с iframe
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = textToCopy;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            
+            try {
+                document.execCommand('copy');
+                // Показываем сообщение об успехе
+                const message = document.getElementById('copy-message');
+                message.classList.remove('hidden', 'opacity-0');
+                message.classList.add('opacity-100');
+                
+                setTimeout(() => {
+                    message.classList.remove('opacity-100');
+                    message.classList.add('opacity-0');
+                    // Скрываем через время, чтобы завершилась анимация
+                    setTimeout(() => message.classList.add('hidden'), 300); 
+                }, 1500);
+
+            } catch (err) {
+                console.error('Не удалось скопировать текст:', err);
+            }
+            document.body.removeChild(tempTextArea);
+        }
+
+        /**
+         * Обрабатывает анимацию появления элементов при прокрутке.
+         */
+        function handleScroll() {
+            const revealItems = document.querySelectorAll('.reveal-item');
+            
+            revealItems.forEach(item => {
+                // Пороговое значение: 85% видимой области
+                const windowHeight = window.innerHeight;
+                const topOfElement = item.getBoundingClientRect().top;
+                
+                if (topOfElement < windowHeight * 0.85) {
+                    item.classList.add('is-visible');
+                } else {
+                    // Опционально: скрыть элемент при прокрутке вверх
+                    // item.classList.remove('is-visible'); 
+                }
+            });
+        }
+
+        // Инициализация при загрузке
+        window.onload = function() {
+            setupTabs();
+            // Первоначальный вызов для элементов в видимой области
+            handleScroll(); 
+            // Добавляем слушателя событий прокрутки
+            window.addEventListener('scroll', handleScroll);
+        };
+    </script>
+</body>
+</html>
