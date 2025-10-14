@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интерактивный калькулятор обрезки для Pixelmator Pro</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Общие стили для соответствия теме Pixelmator Pro */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #333;
+            color: #e0e0e0;
+            padding: 1rem;
+        }
+
+        /* Стиль основного окна калькулятора */
+        .pixelmator-window {
+            background-color: #2b2b2b;
+            border: 1px solid #444;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            margin: 2rem auto;
+            overflow: hidden;
+        }
+
+        /* Заголовок окна */
+        .pixelmator-header {
+            background-color: #3a3a3a;
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #444;
+            color: #ccc;
+        }
+
+        .pixelmator-header .title {
+            font-weight: 500;
+        }
+
+        .pixelmator-header .close-btn {
+            font-size: 1.2rem;
+            color: #888;
+            cursor: pointer;
+        }
+        
+        .pixelmator-body {
+            padding: 1.5rem;
+        }
+        
+        /* Стилизация полей ввода */
+        .form-control, .form-select {
+            background-color: #3a3a3a;
+            border: 1px solid #555;
+            color: #e0e0e0;
+            border-radius: 6px;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: #444;
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, .25);
+            color: #fff;
+        }
+
+        .form-control[readonly] {
+            background-color: #222;
+            opacity: 0.8;
+            cursor: not-allowed;
+        }
+
+        .form-label {
+            color: #aaa;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Стиль для разделителей */
+        hr {
+            border-top: 1px solid #444;
+        }
+
+        h5 {
+            color: #e0e0e0;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        
+        /* Визуальное представление обрезки */
+        .preview-container {
+            position: relative;
+            width: 100%;
+            padding-top: 75%; /* Аспектное соотношение 4:3 для контейнера */
+            background-color: #3a3a3a;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 1.5rem;
+            border: 1px solid #444;
+        }
+        
+        .image-preview {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .crop-box {
+            position: absolute;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+            border: 1px dashed #fff;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="pixelmator-window">
+        <!-- Заголовок окна -->
+        <div class="pixelmator-header">
+            <span class="title">📋 Crop Calculator</span>
+            <span class="close-btn">&times;</span>
+        </div>
+
+        <!-- Тело калькулятора -->
+        <div class="pixelmator-body">
+            
+            <!-- 1. Исходные размеры -->
+            <h5>Исходные размеры изображения</h5>
+            <div class="row g-3">
+                <div class="col">
+                    <label for="initialWidth" class="form-label">Width (px)</label>
+                    <input type="number" class="form-control" id="initialWidth" value="1024">
+                </div>
+                <div class="col">
+                    <label for="initialHeight" class="form-label">Height (px)</label>
+                    <input type="number" class="form-control" id="initialHeight" value="1447">
+                </div>
+            </div>
+
+            <!-- 2. Отступы для обрезки -->
+            <h5>Отступы по краям (px)</h5>
+            <div class="row g-3">
+                <div class="col-6">
+                    <label for="marginTop" class="form-label">Сверху (Top)</label>
+                    <input type="number" class="form-control" id="marginTop" value="75">
+                </div>
+                <div class="col-6">
+                    <label for="marginBottom" class="form-label">Снизу (Bottom)</label>
+                    <input type="number" class="form-control" id="marginBottom" value="76">
+                </div>
+                <div class="col-6">
+                    <label for="marginLeft" class="form-label">Слева (Left)</label>
+                    <input type="number" class="form-control" id="marginLeft" value="67">
+                </div>
+                <div class="col-6">
+                    <label for="marginRight" class="form-label">Справа (Right)</label>
+                    <input type="number" class="form-control" id="marginRight" value="67">
+                </div>
+            </div>
+            
+            <!-- Визуальный предпросмотр -->
+            <div class="preview-container">
+                <div class="image-preview" id="imagePreview">
+                    <div class="crop-box" id="cropBox"></div>
+                </div>
+            </div>
+
+
+            <hr class="my-4">
+
+            <!-- 3. Итоговые параметры для Pixelmator Pro -->
+            <h5>Итоговые параметры для Pixelmator Pro</h5>
+            <div class="mb-3">
+                <label for="outputPosition" class="form-label">Position</label>
+                <select id="outputPosition" class="form-select">
+                    <option>Custom</option>
+                </select>
+            </div>
+            <div class="row g-3">
+                <div class="col-6">
+                    <label for="outputX" class="form-label">X Coordinate</label>
+                    <input type="text" id="outputX" class="form-control" readonly>
+                </div>
+                <div class="col-6">
+                    <label for="outputY" class="form-label">Y Coordinate</label>
+                    <input type="text" id="outputY" class="form-control" readonly>
+                </div>
+                <div class="col-6">
+                    <label for="outputWidth" class="form-label">Width</label>
+                    <input type="text" id="outputWidth" class="form-control" readonly>
+                </div>
+                <div class="col-6">
+                    <label for="outputHeight" class="form-label">Height</label>
+                    <input type="text" id="outputHeight" class="form-control" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Получаем ссылки на все элементы DOM
+        const initialWidthEl = document.getElementById('initialWidth');
+        const initialHeightEl = document.getElementById('initialHeight');
+        const marginTopEl = document.getElementById('marginTop');
+        const marginBottomEl = document.getElementById('marginBottom');
+        const marginLeftEl = document.getElementById('marginLeft');
+        const marginRightEl = document.getElementById('marginRight');
+
+        const outputXEl = document.getElementById('outputX');
+        const outputYEl = document.getElementById('outputY');
+        const outputWidthEl = document.getElementById('outputWidth');
+        const outputHeightEl = document.getElementById('outputHeight');
+        
+        const imagePreviewEl = document.getElementById('imagePreview');
+        const cropBoxEl = document.getElementById('cropBox');
+
+        // Массив всех полей ввода для добавления обработчиков
+        const inputs = [
+            initialWidthEl, initialHeightEl, 
+            marginTopEl, marginBottomEl, 
+            marginLeftEl, marginRightEl
+        ];
+
+        // Функция для расчета и обновления значений
+        function updateCropParameters() {
+            // Считываем исходные значения, преобразуя их в числа
+            const iWidth = parseInt(initialWidthEl.value, 10) || 0;
+            const iHeight = parseInt(initialHeightEl.value, 10) || 0;
+            let mTop = parseInt(marginTopEl.value, 10) || 0;
+            let mBottom = parseInt(marginBottomEl.value, 10) || 0;
+            let mLeft = parseInt(marginLeftEl.value, 10) || 0;
+            let mRight = parseInt(marginRightEl.value, 10) || 0;
+            
+            // --- Валидация входных данных ---
+            // Отступы не могут быть отрицательными
+            if (mTop < 0) mTop = 0;
+            if (mBottom < 0) mBottom = 0;
+            if (mLeft < 0) mLeft = 0;
+            if (mRight < 0) mRight = 0;
+
+            // Сумма вертикальных отступов не может превышать высоту
+            if (mTop + mBottom > iHeight) {
+                if (mTop > iHeight) mTop = iHeight;
+                mBottom = iHeight - mTop;
+            }
+            // Сумма горизонтальных отступов не может превышать ширину
+            if (mLeft + mRight > iWidth) {
+                if (mLeft > iWidth) mLeft = iWidth;
+                mRight = iWidth - mLeft;
+            }
+            
+            // Обновляем поля ввода, если валидация их изменила
+            marginTopEl.value = mTop;
+            marginBottomEl.value = mBottom;
+            marginLeftEl.value = mLeft;
+            marginRightEl.value = mRight;
+            
+            // --- Расчет итоговых параметров ---
+            const finalX = mLeft;
+            const finalY = mTop;
+            const finalWidth = iWidth - mLeft - mRight;
+            const finalHeight = iHeight - mTop - mBottom;
+
+            // Обновляем итоговые поля
+            outputXEl.value = finalX;
+            outputYEl.value = finalY;
+            outputWidthEl.value = finalWidth > 0 ? finalWidth : 0;
+            outputHeightEl.value = finalHeight > 0 ? finalHeight : 0;
+            
+            // --- Обновление визуального предпросмотра ---
+            if (iWidth > 0 && iHeight > 0) {
+                // Устанавливаем соотношение сторон для контейнера
+                const aspectRatio = iHeight / iWidth;
+                imagePreviewEl.parentElement.style.paddingTop = `${aspectRatio * 100}%`;
+                
+                // Рассчитываем позицию и размер рамки в процентах
+                const cropXPercent = (finalX / iWidth) * 100;
+                const cropYPercent = (finalY / iHeight) * 100;
+                const cropWidthPercent = (outputWidthEl.value / iWidth) * 100;
+                const cropHeightPercent = (outputHeightEl.value / iHeight) * 100;
+
+                cropBoxEl.style.left = `${cropXPercent}%`;
+                cropBoxEl.style.top = `${cropYPercent}%`;
+                cropBoxEl.style.width = `${cropWidthPercent}%`;
+                cropBoxEl.style.height = `${cropHeightPercent}%`;
+            }
+        }
+
+        // Добавляем обработчик события 'input' для каждого поля ввода
+        inputs.forEach(input => {
+            input.addEventListener('input', updateCropParameters);
+        });
+
+        // Вызываем функцию при первой загрузке страницы для инициализации
+        document.addEventListener('DOMContentLoaded', updateCropParameters);
+    </script>
+</body>
+</html>
