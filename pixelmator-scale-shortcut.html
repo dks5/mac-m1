@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Инструкция по увеличению разрешения</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1a1c;
+            color: #f0f0f0;
+        }
+        .shortcut-container {
+            background-color: #2c2c2e;
+            border-radius: 16px;
+            border: 1px solid #4a4a4c;
+        }
+        .action-block {
+            background-color: #3a3a3c;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid #5a5a5c;
+            transition: all 0.2s ease-in-out;
+        }
+        .param-btn {
+            background-color: #5a5a5c;
+            color: #34aadc;
+            font-weight: 500;
+            padding: 2px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: inline-block;
+            position: relative;
+        }
+        .param-btn:hover {
+            background-color: #6a6a6c;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: #4c4c4e;
+            border-radius: 8px;
+            padding: 8px;
+            border: 1px solid #6a6a6c;
+            z-index: 10;
+            min-width: 180px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .dropdown-menu.show {
+            display: block;
+        }
+        .dropdown-item {
+            padding: 8px 12px;
+            color: #f0f0f0;
+            cursor: pointer;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+        }
+        .dropdown-item .check {
+            opacity: 0;
+            margin-right: 8px;
+            color: #34aadc;
+        }
+        .dropdown-item.selected .check {
+            opacity: 1;
+        }
+        .dropdown-item:hover {
+            background-color: #5a5a5c;
+        }
+        .input-field {
+            background-color: #5a5a5c;
+            border: 1px solid #6a6a6c;
+            border-radius: 6px;
+            padding: 4px 8px;
+            color: #f0f0f0;
+            font-weight: 500;
+            text-align: center;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #34aadc;
+            box-shadow: 0 0 0 2px rgba(52, 170, 220, 0.5);
+        }
+        .info-box {
+            background-color: #2c2c2e;
+            border-left: 3px solid #34aadc;
+            padding: 12px;
+            margin-top: 12px;
+            border-radius: 0 8px 8px 0;
+            color: #d1d1d6;
+        }
+        .example-box {
+            background-color: #2c2c2e;
+            border-left: 3px solid #28a745;
+            padding: 12px;
+            margin-top: 8px;
+            border-radius: 0 8px 8px 0;
+            color: #d1d1d6;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+
+    <div class="max-w-3xl mx-auto">
+        <h1 class="text-3xl font-bold mb-2 text-center">Интерактивная инструкция</h1>
+        <p class="text-gray-400 mb-8 text-center">Настройте параметры для увеличения разрешения изображений</p>
+
+        <!-- Калькулятор --><div class="shortcut-container p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Шаг 1: Рассчитайте процент увеличения</h2>
+            <p class="text-gray-400 mb-4">Укажите текущее и желаемое разрешение (DPI/PPI), чтобы узнать, на сколько процентов нужно увеличить изображение. Для FineReader рекомендуется 300 DPI.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                <div>
+                    <label for="currentDpi" class="block text-sm font-medium text-gray-300 mb-1">Текущее разрешение (DPI)</label>
+                    <input type="number" id="currentDpi" value="288" class="w-full input-field text-lg">
+                </div>
+                <div>
+                    <label for="desiredDpi" class="block text-sm font-medium text-gray-300 mb-1">Желаемое разрешение (DPI)</label>
+                    <input type="number" id="desiredDpi" value="300" class="w-full input-field text-lg">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Результат</label>
+                    <div class="w-full bg-gray-800 rounded-lg p-2 text-center">
+                         <span id="resultPercent" class="text-lg font-bold text-green-400">104</span><span class="text-gray-400">%</span>
+                    </div>
+                </div>
+            </div>
+             <button id="applyPercentBtn" class="mt-4 w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                Применить этот процент на Шаге 2
+            </button>
+        </div>
+
+        <!-- Интерфейс быстрой команды --><div class="shortcut-container p-6">
+            <h2 class="text-xl font-semibold mb-4">Шаг 2: Настройте команду изменения размера</h2>
+
+            <!-- Блок 1: Получить входные данные --><div class="action-block flex items-center">
+                 <svg class="w-12 h-12 mr-4 text-blue-400 p-2 bg-gray-700 rounded-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <p class="text-lg">Получить <span class="font-semibold text-blue-300">Изображения</span> от <span class="font-semibold text-blue-300">Быстрые действия</span></p>
+            </div>
+
+            <!-- Блок 2: Изменить размер (интерактивный) --><div id="resizeActionBlock" class="action-block ring-2 ring-blue-500">
+                <div class="flex items-center text-lg flex-wrap">
+                    <svg class="w-12 h-12 mr-4 text-purple-400 p-2 bg-gray-700 rounded-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12H20M12 4V20M4 8l-4 4 4 4m16-8l4 4-4 4M8 4H4a2 2 0 00-2 2v4a2 2 0 002 2h4m-4 8h4a2 2 0 002-2v-4a2 2 0 00-2-2H4"></path></svg>
+                    <span class="font-semibold">Resize </span>
+                    <span class="font-semibold text-blue-300 mx-2">Входные данные команды</span>
+                    <span> to </span>
+                    
+                    <!-- Селектор метода --><div class="relative inline-block mx-2">
+                        <div id="resizeMethodBtn" class="param-btn">
+                            <span id="resizeMethodText">Percentage</span>
+                        </div>
+                        <div id="resizeMethodMenu" class="dropdown-menu">
+                            <div class="dropdown-item selected" data-value="Percentage"><span class="check">✓</span>Percentage</div>
+                            <div class="dropdown-item" data-value="Size"><span class="check">✓</span>Size</div>
+                            <div class="dropdown-item" data-value="Longest Edge"><span class="check">✓</span>Longest Edge</div>
+                        </div>
+                    </div>
+
+                    <!-- Поля для ввода значений --><div id="percentageInputContainer" class="inline-block">
+                        <input type="number" id="percentageValue" value="104" class="input-field w-20 mx-1"> %
+                    </div>
+                    <div id="sizeInputContainer" class="hidden">
+                        <input type="number" value="1920" class="input-field w-20 mx-1"> x
+                        <input type="number" value="1080" class="input-field w-20 mx-1">
+                    </div>
+                     <div id="longestEdgeInputContainer" class="hidden">
+                        <input type="number" value="1000" class="input-field w-20 mx-1"> pixels
+                    </div>
+
+                    <span class="mx-2">using</span>
+
+                    <!-- Селектор алгоритма --><div class="relative inline-block">
+                        <div id="resamplingBtn" class="param-btn">
+                            <span id="resamplingText">Super Resolution</span>
+                        </div>
+                        <div id="resamplingMenu" class="dropdown-menu">
+                            <div class="dropdown-item" data-value="Super Resolution"><span class="check">✓</span>Super Resolution</div>
+                            <div class="dropdown-item" data-value="Lanczos"><span class="check">✓</span>Lanczos</div>
+                            <div class="dropdown-item" data-value="Bilinear"><span class="check">✓</span>Bilinear</div>
+                            <div class="dropdown-item" data-value="Nearest Neighbor"><span class="check">✓</span>Nearest Neighbor</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Блок с объяснением МЕТОДА --><div id="resizeMethodExplanationBox" class="mt-4"></div>
+
+                <!-- Блок с объяснением АЛГОРИТМА --><div id="resamplingExplanationBox" class="mt-4"></div>
+            </div>
+            
+            <!-- Блок 3: Сохранить файл --><div class="action-block flex items-center">
+                 <svg class="w-12 h-12 mr-4 text-green-400 p-2 bg-gray-700 rounded-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <p class="text-lg">Сохранить <span class="font-semibold text-blue-300">Измененные изображения</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentDpi = document.getElementById('currentDpi');
+            const desiredDpi = document.getElementById('desiredDpi');
+            const resultPercent = document.getElementById('resultPercent');
+            const applyPercentBtn = document.getElementById('applyPercentBtn');
+            const percentageValueInput = document.getElementById('percentageValue');
+
+            const resizeMethodBtn = document.getElementById('resizeMethodBtn');
+            const resizeMethodMenu = document.getElementById('resizeMethodMenu');
+            const resizeMethodText = document.getElementById('resizeMethodText');
+            const resizeMethodItems = resizeMethodMenu.querySelectorAll('.dropdown-item');
+            const resizeMethodExplanationBox = document.getElementById('resizeMethodExplanationBox');
+            
+            const percentageInputContainer = document.getElementById('percentageInputContainer');
+            const sizeInputContainer = document.getElementById('sizeInputContainer');
+            const longestEdgeInputContainer = document.getElementById('longestEdgeInputContainer');
+
+            const resamplingBtn = document.getElementById('resamplingBtn');
+            const resamplingMenu = document.getElementById('resamplingMenu');
+            const resamplingText = document.getElementById('resamplingText');
+            const resamplingItems = resamplingMenu.querySelectorAll('.dropdown-item');
+            const resamplingExplanationBox = document.getElementById('resamplingExplanationBox');
+
+            const resizeMethodExplanations = {
+                'Percentage': {
+                    title: '✅ Percentage (Проценты) — Рекомендуется',
+                    text: 'Этот метод изменяет размер изображения на указанный процент от его исходных размеров, идеально сохраняя пропорции. Лучший выбор для простого увеличения или уменьшения.',
+                    example: 'Введите `200` в поле, чтобы удвоить размер изображения. Введите `50`, чтобы уменьшить его вдвое. Калькулятор выше помогает рассчитать точное значение для изменения DPI.'
+                },
+                'Size': {
+                    title: 'Size (Точный размер)',
+                    text: 'Позволяет установить точную ширину и высоту изображения в пикселях. Будьте осторожны: если новые размеры не соответствуют исходным пропорциям, изображение может исказиться (растянуться или сжаться).',
+                    example: 'Введите `1920` в первое поле (ширина) и `1080` во второе (высота), чтобы получить изображение Full HD.'
+                },
+                'Longest Edge': {
+                    title: 'Longest Edge (Длинная сторона)',
+                    text: 'Устанавливает размер самой длинной стороны изображения (ширины для горизонтальных или высоты для вертикальных фото), автоматически и пропорционально изменяя вторую сторону. Удобно, чтобы "вписать" разноформатные изображения в один максимальный размер.',
+                    example: 'Введите `1500`. Если у вас изображение 1200x800, оно станет 1500x1000. Если у вас изображение 800x1200, оно станет 1000x1500.'
+                }
+            };
+
+            const resamplingExplanations = {
+                'Super Resolution': { title: '✅ Super Resolution (Суперразрешение) — Рекомендуется', text: 'Современный алгоритм на основе ИИ. Он не просто добавляет пиксели, а интеллектуально восстанавливает детали, делая текст и контуры максимально четкими. Идеально для OCR.' },
+                'Lanczos': { title: 'Lanczos', text: 'Продвинутый алгоритм, дающий более резкий результат, чем Bilinear. Отличный выбор, если Super Resolution недоступен. Иногда может создавать легкий ореол вокруг контрастных объектов.' },
+                'Bilinear': { title: 'Bilinear (Билинейный)', text: 'Стандартный алгоритм, который усредняет цвета соседних пикселей. Быстрый, но результат получается немного размытым. Подходит для общих задач.' },
+                'Nearest Neighbor': { title: '❌ Nearest Neighbor (Ближайший сосед) — Не рекомендуется', text: 'Самый простой метод, который просто дублирует пиксели. Приводит к появлению резких "квадратных" краев (пикселизации). Не подходит для улучшения качества текста.' }
+            };
+            
+            function calculateDpi() {
+                const current = parseFloat(currentDpi.value);
+                const desired = parseFloat(desiredDpi.value);
+                if (current > 0 && desired > 0) {
+                    resultPercent.textContent = Math.round((desired / current) * 100);
+                } else {
+                    resultPercent.textContent = '...';
+                }
+            }
+            
+            [currentDpi, desiredDpi].forEach(el => el.addEventListener('input', calculateDpi));
+            
+            applyPercentBtn.addEventListener('click', () => {
+                percentageValueInput.value = resultPercent.textContent;
+                handleResizeMethodChange('Percentage');
+                document.getElementById('resizeActionBlock').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+
+            function toggleDropdown(menu) {
+                document.querySelectorAll('.dropdown-menu.show').forEach(openMenu => {
+                    if (openMenu !== menu) openMenu.classList.remove('show');
+                });
+                menu.classList.toggle('show');
+            }
+
+            resizeMethodBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(resizeMethodMenu); });
+            resamplingBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(resamplingMenu); });
+
+            function updateExplanation(container, data) {
+                if (data) {
+                    let exampleHtml = data.example ? `<div class="example-box"><h5 class="font-semibold text-white mb-1">Пример ввода:</h5><p class="text-sm font-mono">${data.example.replace(/`([^`]+)`/g, '<code class="bg-gray-700 rounded px-1 py-0.5">$&</code>').replace(/`/g, '')}</p></div>` : '';
+                    container.innerHTML = `
+                        <div class="info-box">
+                            <h4 class="font-semibold text-white mb-1">${data.title}</h4>
+                            <p class="text-sm">${data.text}</p>
+                        </div>
+                        ${exampleHtml}
+                    `;
+                } else {
+                    container.innerHTML = '';
+                }
+            }
+
+            function handleResizeMethodChange(value) {
+                resizeMethodText.textContent = value;
+                [percentageInputContainer, sizeInputContainer, longestEdgeInputContainer].forEach(c => c.classList.add('hidden'));
+                
+                if (value === 'Percentage') percentageInputContainer.classList.remove('hidden');
+                else if (value === 'Size') sizeInputContainer.classList.remove('hidden');
+                else if (value === 'Longest Edge') longestEdgeInputContainer.classList.remove('hidden');
+
+                resizeMethodItems.forEach(item => item.classList.toggle('selected', item.dataset.value === value));
+                updateExplanation(resizeMethodExplanationBox, resizeMethodExplanations[value]);
+            }
+            
+            function handleResamplingChange(value) {
+                 resamplingText.textContent = value;
+                 resamplingItems.forEach(i => i.classList.toggle('selected', i.dataset.value === value));
+                 updateExplanation(resamplingExplanationBox, resamplingExplanations[value]);
+            }
+
+            resizeMethodItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    handleResizeMethodChange(item.dataset.value);
+                    resizeMethodMenu.classList.remove('show');
+                });
+            });
+            
+            resamplingItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    handleResamplingChange(item.dataset.value);
+                    resamplingMenu.classList.remove('show');
+                });
+            });
+
+            window.addEventListener('click', () => {
+                document.querySelectorAll('.dropdown-menu.show').forEach(menu => menu.classList.remove('show'));
+            });
+
+            // --- Инициализация ---
+            calculateDpi();
+            handleResizeMethodChange('Percentage');
+            handleResamplingChange('Super Resolution');
+        });
+    </script>
+
+</body>
+</html>
+
